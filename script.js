@@ -30,7 +30,7 @@ const createWeatherCard = (cityName, element, index) => {
 };
 
 const getWeatherDetails = (cityName, lat, lon) => {
-    const Weather_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_key}`;
+    const Weather_API_URL = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_key}`;
 
     fetch(Weather_API_URL)
         .then(res => res.json())
@@ -65,7 +65,7 @@ const getWeatherDetails = (cityName, lat, lon) => {
 const getCityCoordinates = () => {
     const cityName = cityInput.value.trim();
     if (!cityName) return;
-    const GEOCODING_API_URL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${API_key}`;
+    const GEOCODING_API_URL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=${API_key}`;
 
     fetch(GEOCODING_API_URL)
         .then(res => res.json())
@@ -83,7 +83,7 @@ const getUserCoordinates = () => {
     navigator.geolocation.getCurrentPosition(
         position => {
             const { latitude, longitude } = position.coords;
-            const REVERSE_GEOCODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_key}`;
+            const REVERSE_GEOCODING_URL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_key}`;
             fetch(REVERSE_GEOCODING_URL).then(res => res.json()).then(data => {
                   
                     const { name } = data[0];
@@ -95,11 +95,17 @@ const getUserCoordinates = () => {
         },
         error => {
             if (error.code === error.PERMISSION_DENIED) {
-                alert("Request denied")
+                alert("Request denied");
+            } else {
+                alert("Geolocation not available or an error occurred.");
             }
         }
-    )
-}
+    );
+};
 
 searchButton.addEventListener("click", getCityCoordinates);
 locationButton.addEventListener("click", getUserCoordinates);
+
+document.addEventListener("DOMContentLoaded", () => {
+    getUserCoordinates();
+});
